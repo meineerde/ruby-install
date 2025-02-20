@@ -212,6 +212,24 @@ function test_when_ruby_version_is_less_than_3_1_0_and_package_manager_is_other(
 	package_manager="$original_package_manager"
 }
 
+function test_when_package_manager_is_brew_and_ruby_version_is_less_than_2_4_0()
+{
+	local original_package_manager="$package_manager"
+	package_manager="brew"
+	ruby_version="2.3.0"
+
+	source "$ruby_install_dir/$ruby/dependencies.sh"
+
+	assertEquals "did not correctly set \$openssl_version" \
+	             "1.0" \
+		     "$openssl_version"
+
+	assertTrue "did not add rbenv/tap/openssl@1.0 to \$ruby_dependencies" \
+	             '[[ " ${ruby_dependencies[*]} " == *" rbenv/tap/openssl@1.0 "* ]]'
+
+	package_manager="$original_package_manager"
+}
+
 function test_when_package_manager_is_brew_and_ruby_version_is_less_than_3_1_0()
 {
 	local original_package_manager="$package_manager"
@@ -224,8 +242,8 @@ function test_when_package_manager_is_brew_and_ruby_version_is_less_than_3_1_0()
 	             "1.1" \
 		     "$openssl_version"
 
-	assertTrue "did not add openssl@1.1 to \$ruby_dependencies" \
-	             '[[ " ${ruby_dependencies[*]} " == *" openssl@1.1 "* ]]'
+	assertTrue "did not add rbenv/tap/openssl@1.1 to \$ruby_dependencies" \
+	             '[[ " ${ruby_dependencies[*]} " == *" rbenv/tap/openssl@1.1 "* ]]'
 
 	package_manager="$original_package_manager"
 }
